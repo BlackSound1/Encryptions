@@ -1,0 +1,16 @@
+[project]
+name = "encryptions"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "typer>=0.16.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "flake8>=7.2.0",
+    "pytest>=8.4.0",
+]
