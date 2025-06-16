@@ -1,4 +1,5 @@
 import string
+from typing_extensions import Annotated
 
 import typer
 from typer import rich_utils
@@ -71,12 +72,18 @@ def caesar_cipher(message: str, offset: int, encrypting: bool) -> str:
     help="""
     Encrypt the given message using a Caesar cipher.
 
+    Caesar ciphers require an offset to be specified. This is the value to shift the
+    alphabet by when encrypting/ decrypting.
+
     Example:
     >>> caesar.py encrypt "hello world" 3
     >>> khoor zruog
     """,
 )
-def encrypt(message: str, offset: int) -> None:
+def encrypt(
+    message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
+    offset: Annotated[int, typer.Argument(help="Set the offset to use", show_default=False)],
+) -> None:
     """
     Encrypt the given message using a Caesar cipher.
 
@@ -94,14 +101,20 @@ def encrypt(message: str, offset: int) -> None:
     help="""
     Decrypt the given message using a Caesar cipher.
 
-    Offset must be same as what was used to encrypt the message, or else the result won't make sense.
+    Caesar ciphers require an offset to be specified. This is the value to shift the
+    alphabet by when encrypting/ decrypting.
+
+    The offset must be same as what was used to encrypt the message, or else the result won't make sense.
 
     Example:
     >>> caesar.py decrypt "khoor zruog" 3
     >>> hello world
     """,
 )
-def decrypt(message: str, offset: int) -> None:
+def decrypt(
+    message: Annotated[str, typer.Argument(help="The message to decrypt", show_default=False)],
+    offset: Annotated[int, typer.Argument(help="Set the offset to use", show_default=False)],
+) -> None:
     """
     Decrypt the given message using a Caesar cipher.
     :param message: The message to decrypt
