@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "encryptions"
 version = "0.1.0"
@@ -8,9 +12,15 @@ dependencies = [
     "typer>=0.16.0",
 ]
 
-[dependency-groups]
+[project.scripts]
+caesar = "caesar_cipher.main:app"
+
+[project.optional-dependencies]
 dev = [
     "black>=25.1.0",
     "flake8>=7.2.0",
     "pytest>=8.4.0",
 ]
+
+[tool.setuptools.packages.find]
+include = ["caesar_cipher*"]

@@ -19,6 +19,8 @@ app = typer.Typer(
     epilog="Thanks for using this utility",
 )
 
+__all__ = ["app"]
+
 
 def caesar_cipher(message: str, offset: int, encrypting: bool) -> str:
     """
