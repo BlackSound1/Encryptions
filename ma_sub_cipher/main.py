@@ -21,12 +21,24 @@ app = typer.Typer(
     no_args_is_help=True,
     add_completion=False,
     epilog="Thanks for using this utility",
+    help="""
+    Uses a monoalphabetic substitution cipher to encrypt/ decrypt a message.
+
+    Accepts an arbitrary cipher alphabet, either as a dedicated file or
+    just as a string in the command.
+
+    Examples:
+    >>> ma_sub encrypt "helloworld" -f samples/ma_sub_cipher_alphabet.txt
+    >>> dsvvbkbnvw
+    >>> ma_sub decrypt "dsvvbkbnvw" -a "qazwsxedcrfvtgbyhnujmikolp"
+    >>> helloworld
+    """,
 )
 
 __all__ = ["app"]
 
 
-def load_alphabet(alphabet_string: Optional[str] = None, alphabet_file: Optional[Path] = None) -> str:
+def _load_alphabet(alphabet_string: Optional[str] = None, alphabet_file: Optional[Path] = None) -> str:
     """
     Load the cipher alphabet.
 
@@ -53,7 +65,7 @@ def load_alphabet(alphabet_string: Optional[str] = None, alphabet_file: Optional
         raise typer.BadParameter(f"Alphabet file not found: {alphabet_file}")
 
 
-def validate_alphabet(message: str, alphabet: str) -> None:
+def _validate_alphabet(message: str, alphabet: str) -> None:
     """
     Ensure the given alphabet follows some rules.
 
@@ -70,10 +82,13 @@ def validate_alphabet(message: str, alphabet: str) -> None:
             raise typer.BadParameter("The cipher alphabet doesn't cover all characters in the message")
 
     if alphabet == ALPHABET:
-        print("The cipher alphabet is the same as the English alphabet. No actual encryption/ decryption will occur")
+        print(
+            "The cipher alphabet is the same as the English alphabet. "
+            "No actual encryption/ decryption will occur"
+        )
 
 
-def ma_sub_cipher(message: str, cipher_alphabet: str, encrypting: bool) -> str:
+def _ma_sub_cipher(message: str, cipher_alphabet: str, encrypting: bool) -> str:
     """
     Actually perform the encryption/ decryption
 
@@ -97,44 +112,122 @@ def ma_sub_cipher(message: str, cipher_alphabet: str, encrypting: bool) -> str:
     short_help="Encrypt the given message using a monoalphabetic substitution cipher.",
     options_metavar="[--help] [-f FILE] | [-a STRING]",
     no_args_is_help=True,
+    help="""
+    Encrypt a plaintext message via monoalphabetic substitution cipher.
+
+    Must supply a cipher alphabet to decrypt with. Supply it either as a file
+    with the -f flag or as a string with the -a flag. Cannot use both flags.
+    If neither flag given, the normal English alphabet is assumed.
+
+    Examples:
+    >>> ma_sub encrypt "helloworld" -f samples/ma_sub_cipher_alphabet.txt
+    >>> dsvvbkbnvw
+    >>> ma_sub encrypt "helloworld" -a "qazwsxedcrfvtgbyhnujmikolp"
+    >>> dsvvbkbnvw
+    """,
 )
 def encrypt(
     message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
     alphabet: Annotated[
-        str, typer.Option(..., "--alphabet", "-a", show_default=False, rich_help_panel="Pick one of")
+        str,
+        typer.Option(
+            ...,
+            "--alphabet",
+            "-a",
+            show_default=False,
+            rich_help_panel="Pick one of",
+            help="The alphabet to use to encrypt the cipher, as a string. Mutually exclusive with -f",
+        ),
     ] = None,
     alphabet_file: Annotated[
         Path,
         typer.Option(
-            "--alphabet-file", "-f", show_default=False, dir_okay=False, exists=True, rich_help_panel="Pick one of"
+            ...,
+            "--alphabet-file",
+            "-f",
+            show_default=False,
+            dir_okay=False,
+            exists=True,
+            rich_help_panel="Pick one of",
+            help="The alphabet to use to encrypt the cipher, as a file. Mutually exclusive with -a",
         ),
     ] = None,
 ):
-    cipher_alphabet = load_alphabet(alphabet, alphabet_file)
-    validate_alphabet(message, cipher_alphabet)
-    print(ma_sub_cipher(message, cipher_alphabet, encrypting=True))
+    """
+    Encrypt a plaintext message via monoalphabetic substitution cipher.
+
+    :param message: The message to encrypt
+    :param alphabet: The alphabet to use to encrypt the cipher, as a string.
+        Mutually exclusive with --alphabet_file
+    :param alphabet_file: The alphabet to use to encrypt the cipher, as a file.
+        Mutually exclusive with --alphabet
+    :return: None
+    """
+    cipher_alphabet = _load_alphabet(alphabet, alphabet_file)
+    _validate_alphabet(message, cipher_alphabet)
+    print(_ma_sub_cipher(message, cipher_alphabet, encrypting=True))
 
 
 @app.command(
     short_help="Decrypt the given message using a monoalphabetic substitution cipher.",
     options_metavar="[--help]",
     no_args_is_help=True,
+    help="""
+    Decrypt an encrypted message via monoalphabetic substitution cipher.
+
+    Must supply a cipher alphabet to decrypt with. Supply it either as a file
+    with the -f flag or as a string with the -a flag. Cannot use both flags.
+    If neither flag given, the normal English alphabet is assumed.
+    The cipher alphabet must be the same as the one that was used to encrypt
+    the message, or else the result won't be correct.
+
+    Examples:
+    >>> ma_sub decrypt "dsvvbkbnvw" -f samples/ma_sub_cipher_alphabet.txt
+    >>> helloworld
+    >>> ma_sub decrypt "dsvvbkbnvw" -a "qazwsxedcrfvtgbyhnujmikolp"
+    >>> helloworld
+    """,
 )
 def decrypt(
     message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
     alphabet: Annotated[
-        str, typer.Option(..., "--alphabet", "-a", show_default=False, rich_help_panel="Pick one of")
+        str,
+        typer.Option(
+            ...,
+            "--alphabet",
+            "-a",
+            show_default=False,
+            rich_help_panel="Pick one of",
+            help="The alphabet to use to encrypt the cipher, as a string. Mutually exclusive with -f",
+        ),
     ] = None,
     alphabet_file: Annotated[
         Path,
         typer.Option(
-            "--alphabet-file", "-f", show_default=False, dir_okay=False, exists=True, rich_help_panel="Pick one of"
+            ...,
+            "--alphabet-file",
+            "-f",
+            show_default=False,
+            dir_okay=False,
+            exists=True,
+            rich_help_panel="Pick one of",
+            help="The alphabet to use to encrypt the cipher, as a file. Mutually exclusive with -a",
         ),
     ] = None,
 ):
-    cipher_alphabet = load_alphabet(alphabet, alphabet_file)
-    validate_alphabet(message, cipher_alphabet)
-    print(ma_sub_cipher(message, cipher_alphabet, encrypting=False))
+    """
+    Decrypt an encrypted message via monoalphabetic substitution cipher.
+
+    :param message: The message to decrypt
+    :param alphabet: The alphabet to use to decrypt the cipher, as a string.
+        Mutually exclusive with --alphabet_file
+    :param alphabet_file: The alphabet to use to decrypt the cipher, as a file.
+        Mutually exclusive with --alphabet
+    :return: None
+    """
+    cipher_alphabet = _load_alphabet(alphabet, alphabet_file)
+    _validate_alphabet(message, cipher_alphabet)
+    print(_ma_sub_cipher(message, cipher_alphabet, encrypting=False))
 
 
 if __name__ == "__main__":

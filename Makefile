@@ -10,13 +10,13 @@ EXCLUDE_PATTERNS := .git,__pycache__,.venv,*.egg-info,build,dist
 .PHONY: format
 format:  ## Format a specified file/ directory. [Default is .]
 	@echo Formatting using Black
-	@uv run black --extend-exclude="($(EXCLUDE_PATTERNS))" --line-length=120 "${FORMAT}"
+	@uv run black --extend-exclude="($(EXCLUDE_PATTERNS))" --line-length=103 "${FORMAT}"
 	@echo ""
 
 .PHONY: lint
 lint:  ## Lint a specified file/ directory. [Default is .]
 	@echo Linting using Flake8
-	@uv run flake8 --exclude="$(EXCLUDE_PATTERNS)" --max-line-length=120 "${LINT}"
+	@uv run flake8 --exclude="$(EXCLUDE_PATTERNS)" --max-line-length=103 "${LINT}"
 	@echo ""
 
 .PHONY: help

@@ -18,12 +18,21 @@ app = typer.Typer(
     no_args_is_help=True,
     add_completion=False,
     epilog="Thanks for using this utility",
+    help="""
+    Uses a Caesar cipher to encrypt/ decrypt a message, with an arbitrary offset.
+
+    Examples:
+    >>> caesar.py encrypt "hello world" 3
+    >>> khoor zruog
+    >>> caesar.py decrypt "khoor zruog" 3
+    >>> hello world
+    """,
 )
 
 __all__ = ["app"]
 
 
-def caesar_cipher(message: str, offset: int, encrypting: bool) -> str:
+def _caesar_cipher(message: str, offset: int, encrypting: bool) -> str:
     """
     Actually perform the Caesar cipher.
 
@@ -89,9 +98,9 @@ def encrypt(
 
     :param message: The message to encrypt
     :param offset: The offset to use in the cipher. For decryption, use the same offset
-    :return: The encrypted message
+    :return: None
     """
-    print(caesar_cipher(message, offset, encrypting=True))
+    print(_caesar_cipher(message, offset, encrypting=True))
 
 
 @app.command(
@@ -104,7 +113,8 @@ def encrypt(
     Caesar ciphers require an offset to be specified. This is the value to shift the
     alphabet by when encrypting/ decrypting.
 
-    The offset must be same as what was used to encrypt the message, or else the result won't make sense.
+    The offset must be same as what was used to encrypt the message,
+    or else the result won't make sense.
 
     Example:
     >>> caesar.py decrypt "khoor zruog" 3
@@ -117,12 +127,13 @@ def decrypt(
 ) -> None:
     """
     Decrypt the given message using a Caesar cipher.
+
     :param message: The message to decrypt
     :param offset: The offset to use in decrypting the ciphertext.
     Must be the same as the offset used to encrypt, or else the message won't make sense.
-    :return: The decrypted message
+    :return: None
     """
-    print(caesar_cipher(message, offset, encrypting=False))
+    print(_caesar_cipher(message, offset, encrypting=False))
 
 
 if __name__ == "__main__":
