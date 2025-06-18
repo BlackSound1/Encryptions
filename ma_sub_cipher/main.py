@@ -14,6 +14,7 @@ rich_utils.OPTIONS_PANEL_TITLE = "[not dim]Options"
 rich_utils.COMMANDS_PANEL_TITLE = "[not dim]Commands"
 rich_utils.ARGUMENTS_PANEL_TITLE = "[not dim]Arguments"
 rich_utils.STYLE_HELPTEXT = "not dim"
+PICK_ONE_OF = "[not dim]Pick one of[/]"
 
 app = typer.Typer(
     name="Monoalphabetic Substitution Cipher",
@@ -135,7 +136,7 @@ def encrypt(
             "--alphabet",
             "-a",
             show_default=False,
-            rich_help_panel="Pick one of",
+            rich_help_panel=PICK_ONE_OF,
             help="The alphabet to use to encrypt the cipher, as a string. Mutually exclusive with -f",
         ),
     ] = None,
@@ -148,7 +149,7 @@ def encrypt(
             show_default=False,
             dir_okay=False,
             exists=True,
-            rich_help_panel="Pick one of",
+            rich_help_panel=PICK_ONE_OF,
             help="The alphabet to use to encrypt the cipher, as a file. Mutually exclusive with -a",
         ),
     ] = None,
@@ -197,7 +198,7 @@ def decrypt(
             "--alphabet",
             "-a",
             show_default=False,
-            rich_help_panel="Pick one of",
+            rich_help_panel=PICK_ONE_OF,
             help="The alphabet to use to encrypt the cipher, as a string. Mutually exclusive with -f",
         ),
     ] = None,
@@ -210,7 +211,7 @@ def decrypt(
             show_default=False,
             dir_okay=False,
             exists=True,
-            rich_help_panel="Pick one of",
+            rich_help_panel=PICK_ONE_OF,
             help="The alphabet to use to encrypt the cipher, as a file. Mutually exclusive with -a",
         ),
     ] = None,
