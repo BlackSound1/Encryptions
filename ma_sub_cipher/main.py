@@ -153,7 +153,7 @@ def encrypt(
             help="The alphabet to use to encrypt the cipher, as a file. Mutually exclusive with -a",
         ),
     ] = None,
-):
+) -> None:
     """
     Encrypt a plaintext message via monoalphabetic substitution cipher.
 
@@ -215,7 +215,7 @@ def decrypt(
             help="The alphabet to use to encrypt the cipher, as a file. Mutually exclusive with -a",
         ),
     ] = None,
-):
+) -> None:
     """
     Decrypt an encrypted message via monoalphabetic substitution cipher.
 
