@@ -1,4 +1,5 @@
 from pathlib import Path
+from string import ascii_lowercase
 
 from typing_extensions import Annotated
 
@@ -23,9 +24,12 @@ app = typer.Typer(
 
 __all__ = ["app"]
 
+ALPHABET = ascii_lowercase
 
-def _load_alphabet(file: Path) -> dict:
-    pass
+
+def _load_square(file: Path) -> list:
+    with open(file, "r") as f:
+        return [line.rstrip("\n") for line in f]
 
 
 @app.command(
@@ -42,7 +46,34 @@ def encrypt(
         Path, typer.Argument(help="The file with the alphabet square", show_default=False)
     ],
 ) -> None:
-    pass
+    square = _load_square(alphabet_file)
+
+    LEN_KEY = len(key)
+    LEN_MESSAGE = len(message)
+
+    # If the key is too long for the message, get only the first characters that will fit
+    if LEN_KEY > LEN_MESSAGE:
+        key = key[:LEN_MESSAGE]
+    # If it's too long, repeat the key until it reaches the length of the message
+    elif LEN_KEY < LEN_MESSAGE:
+        div, mod = divmod(LEN_MESSAGE, LEN_KEY)
+
+        key = key * div + key[:mod]
+
+    encrypted = ""
+
+    # Iterate through the key and message at the same time
+    for key_letter, message_letter in zip(key, message):
+        # Find the alphabet that starts with the key letter
+        for alpha in square:
+            if alpha[0] == key_letter:
+                # Find where the message_letter is in the norma alphabet
+                normal_index = ALPHABET.find(message_letter)
+
+                # See where that location is in the found alphabet
+                encrypted += alpha[normal_index]
+
+    print(encrypted)
 
 
 @app.command(
