@@ -32,6 +32,46 @@ def _load_square(file: Path) -> list:
         return [line.rstrip("\n") for line in f]
 
 
+def _same_length_key_and_message(key, message):
+    LEN_KEY = len(key)
+    LEN_MESSAGE = len(message)
+
+    # If the key is too long for the message, get only the first characters that will fit
+    if LEN_KEY > LEN_MESSAGE:
+        key = key[:LEN_MESSAGE]
+
+    # If it's too long, repeat the key until it reaches the length of the message
+    elif LEN_KEY < LEN_MESSAGE:
+        div, mod = divmod(LEN_MESSAGE, LEN_KEY)
+
+        key = key * div + key[:mod]
+
+    return key
+
+
+def _vigenere_cipher(message: str, key: str, square: list, encrypting: bool) -> str:
+    to_return = ""
+
+    # Iterate through the key and message at the same time
+    for key_letter, message_letter in zip(key, message):
+        # Find the alphabet that starts with the key letter
+        for alpha in square:
+            if alpha[0] == key_letter:
+                if encrypting:
+                    # Find where the message_letter is in the normal alphabet
+                    normal_index = ALPHABET.find(message_letter)
+
+                    # See where that location is in the found alphabet
+                    to_return += alpha[normal_index]
+                else:
+                    # Find where the message_letter is in the cipher alphabet
+                    cipher_index = alpha.find(message_letter)
+
+                    # See where that location is in the normal alphabet
+                    to_return += ALPHABET[cipher_index]
+    return to_return
+
+
 @app.command(
     short_help="Encrypt a given message using a Vigenere cipher and a key.",
     options_metavar="[--help]",
@@ -47,33 +87,8 @@ def encrypt(
     ],
 ) -> None:
     square = _load_square(alphabet_file)
-
-    LEN_KEY = len(key)
-    LEN_MESSAGE = len(message)
-
-    # If the key is too long for the message, get only the first characters that will fit
-    if LEN_KEY > LEN_MESSAGE:
-        key = key[:LEN_MESSAGE]
-    # If it's too long, repeat the key until it reaches the length of the message
-    elif LEN_KEY < LEN_MESSAGE:
-        div, mod = divmod(LEN_MESSAGE, LEN_KEY)
-
-        key = key * div + key[:mod]
-
-    encrypted = ""
-
-    # Iterate through the key and message at the same time
-    for key_letter, message_letter in zip(key, message):
-        # Find the alphabet that starts with the key letter
-        for alpha in square:
-            if alpha[0] == key_letter:
-                # Find where the message_letter is in the normal alphabet
-                normal_index = ALPHABET.find(message_letter)
-
-                # See where that location is in the found alphabet
-                encrypted += alpha[normal_index]
-
-    print(encrypted)
+    key = _same_length_key_and_message(key, message)
+    print(_vigenere_cipher(message, key, square, encrypting=True))
 
 
 @app.command(
@@ -91,33 +106,8 @@ def decrypt(
     ],
 ) -> None:
     square = _load_square(alphabet_file)
-
-    LEN_KEY = len(key)
-    LEN_MESSAGE = len(message)
-
-    # If the key is too long for the message, get only the first characters that will fit
-    if LEN_KEY > LEN_MESSAGE:
-        key = key[:LEN_MESSAGE]
-    # If it's too long, repeat the key until it reaches the length of the message
-    elif LEN_KEY < LEN_MESSAGE:
-        div, mod = divmod(LEN_MESSAGE, LEN_KEY)
-
-        key = key * div + key[:mod]
-
-    decrypted = ""
-
-    # Iterate through the key and message at the same time
-    for key_letter, message_letter in zip(key, message):
-        # Find the alphabet that starts with the key letter
-        for alpha in square:
-            if alpha[0] == key_letter:
-                # Find where the message_letter is in the cipher alphabet
-                cipher_index = alpha.find(message_letter)
-
-                # See where that location is in the normal alphabet
-                decrypted += ALPHABET[cipher_index]
-
-    print(decrypted)
+    key = _same_length_key_and_message(key, message)
+    print(_vigenere_cipher(message, key, square, encrypting=False))
 
 
 if __name__ == "__main__":
