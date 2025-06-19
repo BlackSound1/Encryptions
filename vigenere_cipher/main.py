@@ -67,7 +67,7 @@ def encrypt(
         # Find the alphabet that starts with the key letter
         for alpha in square:
             if alpha[0] == key_letter:
-                # Find where the message_letter is in the norma alphabet
+                # Find where the message_letter is in the normal alphabet
                 normal_index = ALPHABET.find(message_letter)
 
                 # See where that location is in the found alphabet
@@ -90,7 +90,34 @@ def decrypt(
         Path, typer.Argument(help="The file with the alphabet square", show_default=False)
     ],
 ) -> None:
-    pass
+    square = _load_square(alphabet_file)
+
+    LEN_KEY = len(key)
+    LEN_MESSAGE = len(message)
+
+    # If the key is too long for the message, get only the first characters that will fit
+    if LEN_KEY > LEN_MESSAGE:
+        key = key[:LEN_MESSAGE]
+    # If it's too long, repeat the key until it reaches the length of the message
+    elif LEN_KEY < LEN_MESSAGE:
+        div, mod = divmod(LEN_MESSAGE, LEN_KEY)
+
+        key = key * div + key[:mod]
+
+    decrypted = ""
+
+    # Iterate through the key and message at the same time
+    for key_letter, message_letter in zip(key, message):
+        # Find the alphabet that starts with the key letter
+        for alpha in square:
+            if alpha[0] == key_letter:
+                # Find where the message_letter is in the cipher alphabet
+                cipher_index = alpha.find(message_letter)
+
+                # See where that location is in the normal alphabet
+                decrypted += ALPHABET[cipher_index]
+
+    print(decrypted)
 
 
 if __name__ == "__main__":
