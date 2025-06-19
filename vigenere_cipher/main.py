@@ -24,15 +24,29 @@ app = typer.Typer(
 
 __all__ = ["app"]
 
-ALPHABET = ascii_lowercase
-
 
 def _load_square(file: Path) -> list:
+    """
+    Loads the given Vigenere square file,
+    removing the trailing newlines along the way.
+
+    :param file: The file to open which contains a valid Vigenere square
+    :return: The square as a list of alphabets
+    """
     with open(file, "r") as f:
         return [line.rstrip("\n") for line in f]
 
 
-def _same_length_key_and_message(key, message):
+def _same_length_key_and_message(key: str, message: str) -> str:
+    """
+    Since the message and key can both be any length, ensure the key is
+    as long as the message.
+
+    :param key: The key which will be used to encrypt/ decrypt
+    :param message: The message to process
+    :return: The key, perhaps altered to be the same length as the message
+    """
+
     LEN_KEY = len(key)
     LEN_MESSAGE = len(message)
 
@@ -50,6 +64,18 @@ def _same_length_key_and_message(key, message):
 
 
 def _vigenere_cipher(message: str, key: str, square: list, encrypting: bool) -> str:
+    """
+    Actually perform the Vigenere cipher.
+
+    :param message: The message to encrypt/ decrypt
+    :param key: The secret key to encrypt/ decrypt with
+    :param square: The Vigenere square to use as a lookup table
+    :param encrypting: Whether we are encrypting or decrypting
+    :return: The encrypted/ decrypted message
+    """
+
+    ALPHABET = ascii_lowercase
+
     to_return = ""
 
     # Iterate through the key and message at the same time
@@ -77,16 +103,33 @@ def _vigenere_cipher(message: str, key: str, square: list, encrypting: bool) -> 
     options_metavar="[--help]",
     no_args_is_help=True,
     help="""
+    Encrypt a given message using a Vigenere cipher and a key.
+    
+    A Vigenere cipher uses a Vigenere square as a sort of lookup table. Supply the
+    location of the square and an arbitrary key. These will be used
+    together to scramble the message.
+    
+    Examples:
+    >>> vigenere encrypt "diverttroopstoeastridge" "white" samples/vigenere_square
+    >>> zpdxvpazhslzbhiwzbkmznm
     """,
 )
 def encrypt(
     message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
     key: Annotated[str, typer.Argument(help="The key used in encryption", show_default=False)],
-    alphabet_file: Annotated[
+    square_file: Annotated[
         Path, typer.Argument(help="The file with the alphabet square", show_default=False)
     ],
 ) -> None:
-    square = _load_square(alphabet_file)
+    """
+    Encrypt the message using a Vigenere cipher with a key.
+
+    :param message: The message to encrypt
+    :param key: The key to encrypt with
+    :param square_file: The Path where the Vigenere square file is stored
+    :return: None
+    """
+    square = _load_square(square_file)
     key = _same_length_key_and_message(key, message)
     print(_vigenere_cipher(message, key, square, encrypting=True))
 
@@ -101,11 +144,19 @@ def encrypt(
 def decrypt(
     message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
     key: Annotated[str, typer.Argument(help="The key used in encryption", show_default=False)],
-    alphabet_file: Annotated[
+    square_file: Annotated[
         Path, typer.Argument(help="The file with the alphabet square", show_default=False)
     ],
 ) -> None:
-    square = _load_square(alphabet_file)
+    """
+    Decrypt the message using a Vigenere cipher with a key.
+
+    :param message: The message to decrypt
+    :param key: The key to decrypt with
+    :param square_file: The Path where the Vigenere square file is stored
+    :return: None
+    """
+    square = _load_square(square_file)
     key = _same_length_key_and_message(key, message)
     print(_vigenere_cipher(message, key, square, encrypting=False))
 

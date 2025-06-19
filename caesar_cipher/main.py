@@ -22,9 +22,9 @@ app = typer.Typer(
     Uses a Caesar cipher to encrypt/ decrypt a message, with an arbitrary offset.
 
     Examples:
-    >>> caesar.py encrypt "hello world" 3
+    >>> caesar encrypt "hello world" 3
     >>> khoor zruog
-    >>> caesar.py decrypt "khoor zruog" 3
+    >>> caesar decrypt "khoor zruog" 3
     >>> hello world
     """,
 )
@@ -85,7 +85,7 @@ def _caesar_cipher(message: str, offset: int, encrypting: bool) -> str:
     alphabet by when encrypting/ decrypting.
 
     Example:
-    >>> caesar.py encrypt "hello world" 3
+    >>> caesar encrypt "hello world" 3
     >>> khoor zruog
     """,
 )
@@ -117,7 +117,7 @@ def encrypt(
     or else the result won't make sense.
 
     Example:
-    >>> caesar.py decrypt "khoor zruog" 3
+    >>> caesar decrypt "khoor zruog" 3
     >>> hello world
     """,
 )
