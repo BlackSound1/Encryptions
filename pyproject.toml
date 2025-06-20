@@ -15,6 +15,7 @@ dependencies = [
 [project.scripts]
 caesar = "caesar_cipher.main:app"
 ma_sub = "ma_sub_cipher.main:app"
+vigenere = "vigenere_cipher.main:app"
 
 [project.optional-dependencies]
 dev = [
@@ -24,4 +25,4 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["caesar_cipher*", "ma_sub_cipher*"]
+include = ["caesar_cipher*", "ma_sub_cipher*", "vigenere_cipher*"]
