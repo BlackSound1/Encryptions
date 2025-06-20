@@ -19,7 +19,7 @@ app = typer.Typer(
     epilog="Thanks for using this utility",
     help="""
     Uses a Vigenere cipher to encrypt/ decrypt a message.
-    
+
     Accepts an arbitrary key. Also accepts a file containing an
     an arbitrary Vigenere square. The Vigenere square must be valid,
     which means that it contains permutations of your chosen alphabet,
@@ -110,11 +110,11 @@ def _vigenere_cipher(message: str, key: str, square: list, encrypting: bool) -> 
     no_args_is_help=True,
     help="""
     Encrypt a given message using a Vigenere cipher and a key.
-    
+
     A Vigenere cipher uses a Vigenere square as a sort of lookup table. Supply the
     location of the square and an arbitrary key. These will be used
     together to scramble the message.
-    
+
     Examples:
     >>> vigenere encrypt "diverttroopstoeastridge" "white" samples/vigenere_square
     >>> zpdxvpazhslzbhiwzbkmznm
@@ -150,10 +150,10 @@ def encrypt(
     A Vigenere cipher uses a Vigenere square as a sort of lookup table. Supply the
     location of the square and an arbitrary key. These will be used
     together to unscramble the message.
-    
+
     The key must be the same as the one used to encrypt the message or the result
     won't make sense
-    
+
     Examples:
     >>> vigenere decrypt "zpdxvpazhslzbhiwzbkmznm" "white" samples/vigenere_square
     >>> diverttroopstoeastridge
