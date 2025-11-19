@@ -17,12 +17,12 @@ caesar = "caesar_cipher.main:app"
 ma_sub = "ma_sub_cipher.main:app"
 vigenere = "vigenere_cipher.main:app"
 
-[project.optional-dependencies]
+[tool.setuptools.packages.find]
+include = ["caesar_cipher*", "ma_sub_cipher*", "vigenere_cipher*"]
+
+[dependency-groups]
 dev = [
     "black>=25.1.0",
     "flake8>=7.2.0",
     "pytest>=8.4.0",
 ]
-
-[tool.setuptools.packages.find]
-include = ["caesar_cipher*", "ma_sub_cipher*", "vigenere_cipher*"]
