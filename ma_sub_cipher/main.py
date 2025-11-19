@@ -83,10 +83,7 @@ def _validate_alphabet(message: str, alphabet: str) -> None:
             raise typer.BadParameter("The cipher alphabet doesn't cover all characters in the message")
 
     if alphabet == ALPHABET:
-        print(
-            "The cipher alphabet is the same as the English alphabet. "
-            "No actual encryption/ decryption will occur"
-        )
+        print("The cipher alphabet is the same as the English alphabet. " "No actual encryption/ decryption will occur")
 
 
 def _ma_sub_cipher(message: str, cipher_alphabet: str, encrypting: bool) -> str:

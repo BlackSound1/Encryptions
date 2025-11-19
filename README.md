@@ -2,6 +2,8 @@
 
 Just testing out some implementations of encryptions.
 
+![Main app](images/main.png)
+
 ## Implemented
 
 1. Caesar cipher (with arbitrary offset)

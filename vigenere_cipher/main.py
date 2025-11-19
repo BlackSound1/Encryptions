@@ -124,7 +124,8 @@ def encrypt(
     message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
     key: Annotated[str, typer.Argument(help="The key used in encryption", show_default=False)],
     square_file: Annotated[
-        Path, typer.Argument(help="The file with the alphabet square", show_default=False)
+        Path,
+        typer.Argument(help="The file with the alphabet square", show_default=False),
     ],
 ) -> None:
     """
@@ -163,7 +164,8 @@ def decrypt(
     message: Annotated[str, typer.Argument(help="The message to encrypt", show_default=False)],
     key: Annotated[str, typer.Argument(help="The key used in encryption", show_default=False)],
     square_file: Annotated[
-        Path, typer.Argument(help="The file with the alphabet square", show_default=False)
+        Path,
+        typer.Argument(help="The file with the alphabet square", show_default=False),
     ],
 ) -> None:
     """
